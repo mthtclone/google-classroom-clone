@@ -1,0 +1,29 @@
+
+[
+    {
+        "courseSlug": "3d-graphic-and-animation",
+        "classTitle": "3D Graphics & Animation",
+        "classDescription": "A project-focused course introducing students to 3D modeling, lighting, animation principles, and production workflows. Students will work with industry-grade tools to build assets and short animated sequences.",
+        
+        "teacher": {
+        "name": "Alexandra Reid",
+        "avatar": "/avaters/73.png",
+        "bio": "Alexandra is a senior 3D artist with over 10 years of experience in game cinematics and animated commercial productions. She specializes in character modeling, stylized rendering, and animation pipelines.",
+        "email": "alexandra.reid@example.com",
+        "officeHours": "Mon & Wed, 2:00 PM – 4:00 PM (Room B212)"
+        },
+    
+        "syllabus": "Welcome to 3D Graphics & Animation!\n\nThis course covers modeling fundamentals, UV unwrapping, texturing, lighting, character animation, and rendering workflows. Throughout the semester, students will complete hands-on projects aimed at building a small but polished animation portfolio.\n\nTopics include:\n• 3D space navigation & topology rules\n• Subdivision modeling & clean geometry\n• PBR texturing and material workflows\n• Lighting with realism & style\n• Keyframing, easing, and motion principles\n• Rendering optimization and compositing\n\nStudents are expected to complete weekly assignments and participate in critique sessions.",
+    
+        "schedule": [
+        { "week": 1, "topic": "Introduction to 3D Software & Navigation" },
+        { "week": 2, "topic": "Modeling Fundamentals & Topology" },
+        { "week": 3, "topic": "Subdivision Modeling & Cleanup Techniques" },
+        { "week": 4, "topic": "UV Unwrapping & Texture Baking" },
+        { "week": 5, "topic": "Lighting Principles & Scene Setup" },
+        { "week": 6, "topic": "Animation Basics: Timing & Keyframes" },
+        { "week": 7, "topic": "Advanced Motion Principles" },
+        { "week": 8, "topic": "Rendering & Compositing" }
+        ]
+    }
+]

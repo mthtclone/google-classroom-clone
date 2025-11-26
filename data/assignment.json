@@ -1,0 +1,54 @@
+{
+  "assignments": [
+    { 
+      "id": 1, 
+      "title": "Modeling Basics", 
+      "courseSlug": "3d-graphic-and-animation",
+      "description": "This assignment introduces the fundamentals of 3D modeling. You are expected to create basic geometric shapes, understand the interface of the 3D software, and explore how to manipulate vertices, edges, and faces. The submission should include at least three distinct models demonstrating proper topology and naming conventions.", 
+      "uploadDate": "2025-11-12",
+      "dueDate": "2025-11-25", 
+      "completed": false 
+    },
+    { 
+      "id": 2, 
+      "courseSlug": "3d-graphic-and-animation",
+      "title": "Animation Project", 
+      "description": "For this project, you are required to produce a short 10-second animation demonstrating principles of movement and timing. The project should include a character or object that undergoes motion, with attention to easing, keyframing, and squash-and-stretch techniques. Include a brief written explanation of your animation choices and any challenges encountered.", 
+      "uploadDate": "2025-11-12",
+      "dueDate": "2025-11-20", 
+      "completed": false 
+    },
+    { 
+      "id": 3, 
+      "courseSlug": "3d-graphic-and-animation",
+      "title": "Lighting & Textures", 
+      "description": "This assignment focuses on applying realistic lighting and textures to your 3D scenes. You must demonstrate understanding of light types, shadows, reflection, and texture mapping. Each scene should have multiple light sources, materials with appropriate properties, and a rendered image showing the final output. Write a short report describing the lighting decisions and any adjustments made to achieve realism.", 
+      "uploadDate": "2025-11-12",
+      "dueDate": "2025-12-10", 
+      "completed": true 
+    },
+    { 
+      "id": 4, 
+      "courseSlug": "3d-graphic-and-animation",
+      "title": "Environment Scene Creation", 
+      "description": "This assignment is designed to simulate a real production scenario where you must build a detailed environment scene from scratch.\n\nYou are required to include multiple layers of assets: terrain, vegetation, buildings, and props. Pay attention to scale, proportion, and placement of objects to create a believable composition.\n\nLighting and atmosphere are critical: demonstrate day/night cycles or weather effects to add realism. Use textures carefully; consider resolution, tiling, and proper material setups.\n\nYou should also optimize your scene for performance, explaining your choices regarding polygon count, LODs, and asset instancing.\n\nSubmission must include:\n- Screenshots from multiple angles\n- Short walkthrough animation\n- A written document outlining workflow, challenges faced, and techniques applied\n\nTake your time to organize your scene logically, structure your assets, and annotate your work where needed to help reviewers understand your process.", 
+      "uploadDate": "2025-11-12",
+      "dueDate": "2025-12-15", 
+      "completed": false 
+    }
+  ],
+  "resources": [
+    { 
+      "id": 1, 
+      "courseSlug": "3d-graphic-and-animation",
+      "title": "3D Modeling Tutorial", 
+      "link": "https://example.com/tutorial1" 
+    },
+    { 
+      "id": 2, 
+      "courseSlug": "3d-graphic-and-animation",
+      "title": "Animation Basics", 
+      "link": "https://example.com/tutorial2" 
+    }
+  ]
+}

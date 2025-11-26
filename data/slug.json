@@ -1,0 +1,25 @@
+{
+    "3d-graphic-and-animation": [
+      {
+        "date": "2024-11-12",
+        "title": "Midterm Exam Schedule",
+        "description": "Dear students, the midterm exam for the 3D Graphic and Animation course will be held on Friday, November 15th, from 10:00 AM to 12:00 PM in Room 302. Please make sure to bring your student ID and all required materials. The exam will cover Chapters 1 through 6, including all lectures and assigned readings. Late arrivals will not be permitted. Good luck!"
+      },
+      {
+        "date": "2024-11-15",
+        "title": "Project Presentation Guidelines",
+        "description": "All students must submit their final project presentations by Sunday, November 17th, before 11:59 PM via the course portal. Each group is allocated 15 minutes for the live presentation, followed by a 5-minute Q&A session. Presentations should include your methodology, results, and conclusions. Please ensure your slides are clear and concise. Late submissions will incur a 10% penalty per day. For any questions regarding the submission format, please consult the project guide or contact the TA."
+      },
+      {
+        "date": "2024-11-18",
+        "title": "Lab Session Rescheduled",
+        "description": "Attention all students: The lab session originally scheduled for Monday, November 20th, has been rescheduled to Wednesday, November 22nd, at 2:00 PM in Lab 3 due to room maintenance. All students are expected to attend the rescheduled session. Any conflicts should be communicated to the course coordinator as soon as possible. Make sure to review the lab manual and complete the pre-lab exercises before attending."
+      },
+      {
+        "date": "2024-11-20",
+        "title": "Extra Credit Workshop",
+        "description": "An optional extra credit workshop will be held on Thursday, November 23rd, from 1:00 PM to 3:00 PM in Room 210. The workshop will cover advanced techniques in 3D animation rendering and optimization. Attendance is optional, but participating students can earn up to 5 extra credit points. Please RSVP on the course portal if you plan to attend. Bring your laptops and any project files you want to work on during the session."
+      }
+    ]
+  }
+  

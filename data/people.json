@@ -1,0 +1,18 @@
+{
+    "people": [
+        {
+            "id": 1,
+            "name": "Alice Johnson",
+            "role": "Teacher",
+            "classes": ["3D Graphic and Animation"],
+            "avatar": "/avaters/73.png"
+        },
+        {
+            "id": 2,
+            "name": "Bob Smith",
+            "role": "Student",
+            "classes": ["3D Graphic and Animation"],
+            "avatar": "/avaters/42.png"
+        }
+    ]
+}
