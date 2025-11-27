@@ -201,7 +201,7 @@ export default {
     display: flex;
     align-items: flex-start;
     line-height: 1.1;
-    gap: 1rem;
+    gap: 0.2rem;
     font-family: var(--secondary-font);
   }
 

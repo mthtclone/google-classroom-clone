@@ -42,13 +42,40 @@
       "id": 1, 
       "courseSlug": "3d-graphic-and-animation",
       "title": "3D Modeling Tutorial", 
-      "link": "https://example.com/tutorial1" 
+      "description": "High-quality topology examples and practice meshes.",
+      "uploadedBy": "Alexandra Reid",
+      "uploadDate": "2025-11-15",  
+      "assignmentId": null,
+      "files": [
+        {
+          "name": "topology-guide.pdf",
+          "url": "/uploads/resources/topology-guide.pdf"
+        },
+        {
+          "name": "mesh-example.jpg",
+          "url": "/uploads/resources/mesh-example.jpg"
+        },
+        {
+          "name": "turntable-reference.mp4",
+          "url": "/uploads/resources/turntable-reference.mp4"
+        }
+      ]
     },
+
     { 
-      "id": 2, 
+       "id": 2,
       "courseSlug": "3d-graphic-and-animation",
-      "title": "Animation Basics", 
-      "link": "https://example.com/tutorial2" 
+      "title": "Lecture Slides – Animation Basics",
+      "description": "Slides covering timing, spacing, and easing.",
+      "uploadedBy": "Alexandra Reid",
+      "uploadDate": "2025-11-16",
+      "assignmentId": 4,
+      "files": [
+        {
+          "name": "animation-basics.pdf",
+          "url": "/uploads/resources/animation-basics.pdf"
+        }
+      ]
     }
   ]
 }

@@ -91,11 +91,9 @@
             v-if="activeTab === 'resources'"
             class="resource-section"
         >
-            <a 
+            <div 
                 v-for="resource in resources"
                 :key="resource.id"
-                :href="resource.link"
-                target="_blank"
                 class="resource-card"
             >
                 <div class="card-header">
@@ -115,11 +113,72 @@
                         </svg>
                         </div>
                         <div class="card-content">
-                            <h5>{{ resource.title }}</h5>
-                            <span class="view-link">View Resource</span>
+                            <h5>{{ resourcesLinked[resource.id].title }} <span class="linked-assignment" v-if="resourcesLinked[resource.id].assignmentTitle">&nbsp;>&nbsp;{{ resourcesLinked[resource.id].assignmentTitle }}</span></h5>
+
+                            <p class="resource-meta">
+                                <span v-if="resource.uploadedBy">
+                                    {{ resource.uploadedBy }}
+                                </span>
+                                <span v-if="resource.uploadDate">
+                                    • {{ formatDate(resource.uploadDate) }}
+                                </span>
+                            </p>
+
+                            <p
+                                class="resource-description"
+                                v-if="resource.description"
+                            >
+                                {{ resource.description }}
+                            </p>
                         </div>
                 </div>
-            </a>
+
+                <div 
+                    v-if="resource.files && resource.files.length"
+                    class="file-row"
+                >
+                    <a
+                        v-for="file in resource.files"
+                        :key="file.url"
+                        class="file-chip"
+                        :href="file.url"
+                        target="_blank"
+                        rel="noopener" 
+                    >
+                        <div v-if="isImage(file)" class="file-thumb">
+                            <img :src="file.url" :alt="file.name">
+                        </div>
+
+                        <div v-else class="file-icon">
+                            <svg 
+                                v-if="isPdf(file)"
+                                width="20px" height="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M.762 23.2c-1.29-1.33.106-3.16 3.89-5.1l2.38-1.22l.928-2.09c.51-1.15 1.27-3.03 1.69-4.18l.765-2.08l-.527-1.54C9.24 5.1 9.009 2.25 9.42 1.22c.557-1.39 2.38-1.24 3.1.242c.564 1.16.506 3.26-.162 5.92l-.548 2.17l.483.846c.266.465 1.04 1.57 1.72 2.45l1.28 1.65l1.6-.215c5.07-.682 6.81.478 6.81 2.14c0 2.1-3.98 2.27-7.32-.15c-.752-.545-1.27-1.09-1.27-1.09s-2.09.44-3.13.727c-1.06.296-1.6.481-3.15 1.02c0 0-.547.82-.903 1.42c-1.33 2.22-2.87 4.05-3.98 4.72c-1.24.749-2.54.8-3.19.125zm2.02-.746c.725-.462 2.19-2.25 3.21-3.91l.411-.672l-1.87.971c-2.89 1.5-4.21 2.91-3.53 3.77c.386.48.848.44 1.78-.153zm18.8-5.44c.709-.512.606-1.54-.195-1.96c-.624-.324-1.13-.39-2.75-.366c-.996.07-2.6.277-2.87.34c0 0 .879.627 1.27.858c.52.306 1.78.875 2.7 1.17c.91.287 1.44.257 1.83-.037zm-7.55-3.24c-.429-.465-1.16-1.44-1.62-2.16c-.605-.818-.908-1.4-.908-1.4s-.442 1.47-.805 2.35l-1.13 2.89l-.328.655s1.74-.59 2.63-.829c.94-.253 2.85-.64 2.85-.64l-.686-.867zm-2.43-10.1c.109-.947.156-1.89-.139-2.37c-.818-.923-1.81-.153-1.64 2.04c.056.738.234 2 .472 2.78l.432 1.41l.304-1.06c.167-.586.424-1.84.57-2.8z"/>
+                            </svg>
+
+                            <svg 
+                                v-else-if="isVideo(file)"
+                                xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 512 512">
+                                <path fill="currentColor" d="M395.6 69.8L325.8 0h-58.2l69.8 69.8h58.2zM23.3 0H0v69.8h93.1L23.3 0zm221.1 69.8L174.5 0h-58.2l69.8 69.8h58.3zm174.5 93.1h-93.1l69.8-69.8h-58.2l-69.8 69.8h-93.1l69.8-69.8h-58.2l-69.8 69.8h-93l69.8-69.8H0v372.4C0 491.1 20.9 512 46.5 512h418.9c25.7 0 46.5-20.9 46.5-46.5V93.1h-23.3l-69.7 69.8zM186.2 442.2V232.7l186.2 104.7l-186.2 104.8zM418.9 0l69.8 69.8H512V0h-93.1z"/>
+                            </svg>
+
+                            <svg 
+                                v-else 
+                                xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 12 12">
+                                 <path fill="currentColor" d="M7 2.5v-2c0-.28-.22-.5-.5-.5H2c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h8c.55 0 1-.45 1-1V4.5c0-.28-.22-.5-.5-.5h-2C7.67 4 7 3.33 7 2.5m1-2V2c0 .55.45 1 1 1h1.5c.45 0 .67-.54.35-.85l-2-2C8.54-.17 8 .06 8 .5"/>
+                            </svg>
+                        </div>
+
+                        <span class="file-name">
+                            {{ file.name }}
+                        </span>
+                    </a>
+                </div> 
+            </div>
+
+            <div v-if="resources.length === 0" class="no-selection">
+                <p>No resources have been posted yet.</p>
+            </div>
         </div>
 
         <div
@@ -281,11 +340,20 @@ export default {
                 });
             });
             return grouped;
+        },
+        resourcesLinked() {
+            return this.resources.reduce((acc, res) => {
+                const assignment = this.assignments.find(a => a.id === res.assignmentId);
+                acc[res.id] = {
+                    ...res,
+                    assignmentTitle: assignment ? assignment.title : null
+                };
+                return acc;
+            }, {});
         }
     },
     created() {
         this.detectSlug();
-
         this.assignments = data.assignments.filter(a => a.courseSlug === this.currentSlug);
         this.resources = data.resources.filter(r => r.courseSlug === this.currentSlug);
         this.overview = overviewData.find(o => o.courseSlug === this.currentSlug);
@@ -319,6 +387,23 @@ export default {
             } else {
                 return '';
             }
+        },
+        getFileExtension(file) {
+            const name = file?.name || '';
+            const parts = name.split('.');
+            if (parts.length < 2) return '';
+            return parts.pop().toLowerCase();
+        },
+        isImage(file) {
+            const ext = this.getFileExtension(file);
+            return ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp'].includes(ext);
+        },
+        isPdf(file) {
+            return this.getFileExtension(file) === 'pdf';
+        },
+        isVideo(file) {
+            const ext = this.getFileExtension(file);
+            return ['mp4', 'mov', 'webm', 'avi', 'mkv'].includes(ext);
         }
     },
 };
@@ -565,7 +650,7 @@ export default {
 
     .resource-card {
         display: flex;
-        align-items: center;
+        flex-direction: column;
         gap: 0.8rem;
         padding: 1rem 1.2rem;
         border-radius: 12px;
@@ -573,10 +658,6 @@ export default {
         background: #fff;
         text-decoration: none;
         transition: box-shadow 0.2s ease, transform 0.2s ease;
-    }
-
-    .resource-card:hover {
-        background-color: #cfcfcf72;
     }
 
     .resource-card .card-header {
@@ -592,10 +673,84 @@ export default {
         color: #222;
     }
 
-    .resource-card .view-link {
-        font-size: 0.85rem;
-        color: #1a73e8;
-        font-weight: 500;
+    .resource-meta {
+        margin: 0;
+        font-size: 0.8rem;
+        color: #777;
+    }
+
+    .resource-description {
+        margin: 0.3rem 0 0;
+        font-size: 0.9rem;
+        color: #555;
+        line-height: 1.4;
+    }
+
+    .file-row {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 0.6rem;
+        margin-top: 0.4rem;
+        overflow-x: auto;
+        padding-top: 0.3rem;
+    }
+
+    .file-chip {
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.35rem 0.5rem;
+        border-radius: 999px;
+        border: 1px solid #e0e0e0;
+        background-color: #fafafa;
+        text-decoration: none;
+        font-size: 0.8rem;
+        color: #333;
+        transition: background-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+    }
+
+    .file-chip:hover {
+        background-color: #f0f0f0;
+        transform: translateY(-1px);
+    }
+
+    .file-thumb {
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        overflow: hidden;
+        flex-shrink: 0;
+        background-color: #ddd;
+    }
+
+    .file-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .file-icon {
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        opacity: 0.9;
+    }
+
+    .file-name {
+        max-width: 140px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .linked-assignment {
+        font-size: 1rem;
+        font-style: italic;
     }
 
     .no-selection {
