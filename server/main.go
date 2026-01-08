@@ -6,6 +6,7 @@ import (
 	"googleCLS/models"
 
 	"github.com/gin-gonic/gin"
+    "github.com/gin-contrib/cors"
 )
 
 func main() {
@@ -14,6 +15,13 @@ func main() {
 	r := gin.Default()
 	// Set Gin mode to release for production
     // gin.SetMode(gin.ReleaseMode)
+
+    r.Use(cors.New(cors.Config{
+        AllowOrigins:     []string{"http://localhost:5173"},
+        AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+        AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+        AllowCredentials: true,
+    }))
 
 	r.GET("/users", func(c *gin.Context) {
 		users, err := models.GetUsers()
@@ -39,6 +47,17 @@ func main() {
             c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
             return
         }
+
+        courses, _ := models.GetCourses()
+        slugMap := make(map[uint]string)
+        for _, course := range courses {
+            slugMap[course.ID] = course.Slug
+        }
+
+        for i := range assignments {
+            assignments[i].CourseSlug = slugMap[assignments[i].CourseID]
+        }
+
         c.JSON(http.StatusOK, assignments)
     })
 
@@ -46,10 +65,31 @@ func main() {
         resources, err := models.GetResources()
         if err != nil {
             c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-            return
+            return 
         }
+
+        courses, _ := models.GetCourses()
+        slugMap := make(map[uint]string)
+        for _, course := range courses {
+            slugMap[course.ID] = course.Slug
+        }
+
+        for i := range resources {
+            resources[i].CourseSlug = slugMap[resources[i].CourseID]
+        }
+
         c.JSON(http.StatusOK, resources)
     })
 
-    r.Run(":8080")
+    r.GET("/course-users", func(c *gin.Context) {
+        usersByCourse, err := models.GetUsersByCourse()
+        if err != nil {
+            c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+            return
+        }
+        c.JSON(http.StatusOK, usersByCourse)
+    })
+    
+
+    r.Run(":9000")
 }

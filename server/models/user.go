@@ -13,6 +13,8 @@ type User struct {
 	Avatar string `json:"avatar,omitempty"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
+
+	Courses []Course `gorm:"many2many:course_users;" json:"courses,omitempty"`
 }
 
 func GetUsers() ([]User, error) {

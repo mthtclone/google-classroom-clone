@@ -11,6 +11,7 @@ type Resource struct {
 	ID uint `gorm:"primaryKey" json:"id"`
 	Title string `json:"title"`
 	CourseID uint `json:"course_id"`
+	CourseSlug string `gorm:"-" json:"courseSlug"`
 	Description string `json:"description"`
 	UploadedBy uint `json:"uploaded_by"` // user.id
 	AssignmentID *uint `json:"assignment_iud,omitempty"`

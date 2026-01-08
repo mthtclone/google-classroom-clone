@@ -9,6 +9,7 @@ type Assignment struct {
 	ID uint `gorm:"primaryKey" json:"id"`
 	Title string `json:"title"`
 	CourseID uint `json:"course_id"`
+	CourseSlug string `gorm:"-" json:"courseSlug"`
 	Description string `json:"description"`
 	UploadDate time.Time `json:"upload_date"`
 	DueDate time.Time `json:"due_date"`

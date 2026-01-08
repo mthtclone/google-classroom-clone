@@ -58,15 +58,15 @@
                 <h3 class="section-title">Instructor</h3>
 
                 <div class="teacher-card">
-                    <div class="avatar" :style="{ backgroundImage: `url(${overview.teacher.avatar})` }"></div>
+                    <div class="avatar" :style="{ backgroundImage: `url(${overview.teacher?.avatar})` }"></div>
                 
                     <div class="teacher-info">
-                        <h4>{{ overview.teacher.name }}</h4>
-                        <p class="bio">{{ overview.teacher.bio }}</p>
+                        <h4>{{ overview.teacher?.name }}</h4>
+                        <p class="bio">{{ overview.teacher?.bio }}</p>
 
                         <div class="contact-info">
-                            <p><strong>Email:</strong>{{ overview.teacher.email }}</p>
-                            <p><strong>Office Hours:</strong>{{ overview.teacher.officeHours }}</p>
+                            <p><strong>Email:</strong>{{ overview.teacher?.email }}</p>
+                            <p><strong>Office Hours:</strong>{{ overview.teacher?.officeHours }}</p>
                         </div>
                     </div>
                 </div>
@@ -74,7 +74,7 @@
 
             <div class="overview-card full-width">
                 <h3 class="section-title">Syllabus</h3>
-                <p class="syllabus-text" v-html="overview.syllabus.replace(/\\n/g, '<br>')"></p>
+                <p class="syllabus-text" v-html="overview.syllabus?.replace(/\\n/g, '<br>')"></p>
             </div>
 
             <div class="overview-card full-width">
@@ -113,7 +113,12 @@
                         </svg>
                         </div>
                         <div class="card-content">
-                            <h5>{{ resourcesLinked[resource.id].title }} <span class="linked-assignment" v-if="resourcesLinked[resource.id].assignmentTitle">&nbsp;>&nbsp;{{ resourcesLinked[resource.id].assignmentTitle }}</span></h5>
+                            <h5>{{ resource.title }} 
+                                <span class="linked-assignment" v-if="resource.assignmentTitle">
+                                    &nbsp;>
+                                    &nbsp;{{ resource.assignmentTitle }}
+                                </span>
+                            </h5>
 
                             <p class="resource-meta">
                                 <span v-if="resource.uploadedBy">
@@ -203,7 +208,7 @@
                 </div>
                 <p class="description">{{ selectedAssignment.description }}</p>
                 <div class="meta-row">
-                    <span class="due-date">Due: {{ selectedAssignment.dueDate }}</span>
+                    <span class="due-date">Due: {{ formatDate(selectedAssignment.dueDate) }}</span>
                 </div>
             </div>
             <a
@@ -241,7 +246,7 @@
                 </div>
 
                 <div class="right-info">
-                    <span class="due-label">Due: {{ assignment.dueDate }}</span>
+                    <span class="due-label">Due: {{ formatDate(assignment.dueDate) }}</span>
                     <div class="badge-row">
                         <span :class="['status-badge', assignment.completed ? 'completed' : 'pending']">
                             {{ assignment.completed ? 'Completed' : 'Pending' }}
@@ -275,7 +280,6 @@
                 :key="className"
                 class="class-group"
             >   
-                <h4 class="class-name">{{ className }}</h4>
 
                 <div class="role-group">
                     <h5 class="role-title">Teacher</h5>
@@ -309,8 +313,10 @@
 </template>
   
 <script>
-import data from '/data/assignment.json';
-import peopleData from '/data/people.json';
+import { useSSRContext } from 'vue';
+
+// import data from '/data/assignment.json';
+// import peopleData from '/data/people.json';
 import overviewData from '/data/overview.json';
 
 export default {
@@ -320,9 +326,9 @@ export default {
             currentSlug: null,
             assignments: [],
             resources: [],
-            people: peopleData.people,
+            people: [],
             selectedAssignment: null,
-            overview: [],
+            overview: {},
             activeTab: 'overview'
         };
     },
@@ -354,9 +360,10 @@ export default {
     },
     created() {
         this.detectSlug();
-        this.assignments = data.assignments.filter(a => a.courseSlug === this.currentSlug);
-        this.resources = data.resources.filter(r => r.courseSlug === this.currentSlug);
-        this.overview = overviewData.find(o => o.courseSlug === this.currentSlug);
+        this.fetchAssignments();
+        this.fetchResources();
+        this.fetchPeople();
+        this.fetchOverview();
     },  
     methods: {
         detectSlug() {
@@ -369,24 +376,35 @@ export default {
             this.activeTab = 'works';
         },
         formatDate(dateStr) {
+            if (!dateStr) return 'N/A';
+
+            const parts = dateStr.split(/[-T:]/);
+            if (parts.length < 3) return 'Invalid Date';
+
+            const year = parseInt(parts[0], 10);
+            const month = parseInt(parts[1], 10) - 1; 
+            const day = parseInt(parts[2], 10);
+
+            const date = new Date(year, month, day);
+            if (isNaN(date.getTime())) return 'Invalid Date';
+
             const options = { month: 'short', day: 'numeric' };
-            const date = new Date(dateStr);
-            return `${date.toLocaleDateString('en-US', options)}`;
+            return date.toLocaleDateString('en-US', options);
         },
         dueBadgeText(assignment) {
+            if (!assignment?.dueDate) return '';
+
+            const parts = assignment.dueDate.split(/[-T:]/);
+            if (parts.length < 3) return '';
+
+            const due = new Date(parseInt(parts[0],10), parseInt(parts[1],10)-1, parseInt(parts[2],10));
             const today = new Date();
-            const due = new Date(assignment.dueDate);
             today.setHours(0,0,0,0);
             due.setHours(0,0,0,0);
-            
-            
-            if (due.getTime() === today.getTime()) {
-                return 'Due Today';
-            } else if (due < today) {
-                return 'Overdue';
-            } else {
-                return '';
-            }
+
+            if (due.getTime() === today.getTime()) return 'Due Today';
+            if (due < today) return 'Overdue';
+            return '';
         },
         getFileExtension(file) {
             const name = file?.name || '';
@@ -404,6 +422,75 @@ export default {
         isVideo(file) {
             const ext = this.getFileExtension(file);
             return ['mp4', 'mov', 'webm', 'avi', 'mkv'].includes(ext);
+        },
+
+        async fetchAssignments() {
+            try {
+                const res = await fetch(`http://localhost:9000/assignments`)
+                let data = await res.json();
+
+                this.assignments = data
+                    .filter(a => a.courseSlug === this.currentSlug)
+                    .map(a => ({
+                        ...a,
+                        uploadDate: a.upload_date,
+                        dueDate: a.due_date
+                    }));
+            } catch (err) {
+                console.error("Failed to fetch assignments:", err);
+            }
+        },
+
+        async fetchResources() {
+            try {
+                const res = await fetch(`http://localhost:9000/resources`)
+                let data = await res.json();
+
+                this.resources = data
+                    .filter(r => r.courseSlug === this.currentSlug)
+                    .map(r => ({
+                        ...r,
+                        uploadedBy: r.uploaded_by,
+                        assignmentId: r.assignment_id ?? null,
+                        files: Array.isArray(r.files) ? r.files : []
+                    }));
+            } catch (err) {
+                console.error("Failed to fetch resources:", err);
+            }
+        },
+
+        async fetchPeople() {
+            try {
+                const res = await fetch(`http://localhost:9000/course-users`);
+                const data = await res.json();
+
+                this.people = [];
+
+                for (const [courseId, users] of Object.entries(data)) {
+                    users.forEach(user => {
+                        user.classes = [courseId];
+                        this.people.push(user);
+                    });
+                }
+
+            } catch (err) {
+                console.error("Failed to fetch people:", err);
+            }
+        },
+
+        fetchOverview() {
+            const overview = overviewData.find(o => o.courseSlug === this.currentSlug)
+            if (overview) {
+                this.overview = overview;
+            } else {
+                this.overview = {
+                    classTitle: '',
+                    classDescription: '',
+                    teacher: {},
+                    syllabus: '',
+                    schedule: []
+                };
+            }
         }
     },
 };
