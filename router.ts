@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import MainPanel from './components/MainPanee.vue';
+import MainPanel from './components/MainPanel.vue';
 import ClassPage from './components/ClassPage.vue';
 
 const routes = [
