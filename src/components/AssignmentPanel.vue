@@ -329,7 +329,9 @@ export default {
             people: [],
             selectedAssignment: null,
             overview: {},
-            activeTab: 'overview'
+            activeTab: 'overview',
+            courseMap: {}, // map to name, slug
+            usersMap: {}, // map to name, role, avatar
         };
     },
     computed: {
@@ -360,10 +362,15 @@ export default {
     },
     created() {
         this.detectSlug();
-        this.fetchAssignments();
-        this.fetchResources();
-        this.fetchPeople();
-        this.fetchOverview();
+        (async () => {
+            await this.fetchCourses();
+            await this.fetchUsers();
+
+            await this.fetchAssignments();
+            await this.fetchResources();
+            await this.fetchPeople();
+            this.fetchOverview();
+         })();
     },  
     methods: {
         detectSlug() {
@@ -434,7 +441,9 @@ export default {
                     .map(a => ({
                         ...a,
                         uploadDate: a.upload_date,
-                        dueDate: a.due_date
+                        dueDate: a.due_date,
+                        courseName: this.coursesMap[a.course_id]?.name || 'Unknown',
+                        assignedByName: this.usersMap[a.assigned_by]?.name || 'Unknown'
                     }));
             } catch (err) {
                 console.error("Failed to fetch assignments:", err);
@@ -450,9 +459,10 @@ export default {
                     .filter(r => r.courseSlug === this.currentSlug)
                     .map(r => ({
                         ...r,
-                        uploadedBy: r.uploaded_by,
+                        uploadedBy: this.usersMap[r.uploaded_by]?.name || 'Unknown',
                         assignmentId: r.assignment_id ?? null,
-                        files: Array.isArray(r.files) ? r.files : []
+                        files: Array.isArray(r.files) ? r.files : [],
+                        courseName: this.coursesMap[r.course_id]?.name || 'Unknown'
                     }));
             } catch (err) {
                 console.error("Failed to fetch resources:", err);
@@ -491,7 +501,38 @@ export default {
                     schedule: []
                 };
             }
-        }
+        },
+
+        async fetchCourses() {
+            try {
+                const res = await fetch(`http://localhost:9000/courses`);
+                const data = await res.json();
+
+                this.coursesMap = {};
+                data.forEach(course => {
+                    this.coursesMap[course.id] = {
+                        name: course.name,
+                        slug: course.slug
+                    };
+                });
+            } catch (err) {
+                console.error("Failed to fetch courses:", err);
+            }
+        },
+
+        async fetchUsers() {
+            try {
+                const res = await fetch(`http://localhost:9000/users`);
+                const data = await res.json();
+
+                this.usersMap = {};
+                data.forEach(user => {
+                    this.usersMap[user.id] = user; // store full user object
+                });
+            } catch (err) {
+                console.error("Failed to fetch users:", err);
+            }
+        },
     },
 };
 </script>
